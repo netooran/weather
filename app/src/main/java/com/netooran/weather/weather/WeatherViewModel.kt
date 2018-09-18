@@ -8,19 +8,7 @@ import com.netooran.weather.persistence.Weather
 
 class WeatherViewModel(private var weatherRepo: WeatherRepository) : ViewModel() {
 
-    private var mCurrentWeather: LiveData<Weather> = weatherRepo.getCurrentWeather(LOCATION_ID)
-
-    fun getCurrentWeather(): LiveData<Weather> = mCurrentWeather
-
-    fun addWeather() {
-        val weather = Weather(0, LOCATION_ID, "32°", "Sunny", R.drawable.ic_01_s)
-        weatherRepo.insert(weather)
-    }
-
-    companion object {
-        // Using a hardcoded value for simplicity
-        const val LOCATION_ID = "Bangalore"
-    }
+    fun getCurrentWeather(location: String): LiveData<Weather> = weatherRepo.getCurrentWeather(location)
 
     class ViewModelFactory(private val repository: WeatherRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

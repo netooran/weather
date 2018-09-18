@@ -3,6 +3,7 @@ package com.netooran.weather.weather
 import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.os.AsyncTask
+import com.netooran.weather.R
 import com.netooran.weather.persistence.Weather
 import com.netooran.weather.persistence.WeatherDao
 import com.netooran.weather.persistence.WeatherDatabase
@@ -19,10 +20,11 @@ class WeatherRepository(context: Context) {
 
     fun getCurrentWeather(location: String): LiveData<Weather> {
         currentWeather = weatherDao.getWeatherByLocation(location)
+        if (currentWeather.value == null) insert(Weather(0, location, "32°", "Sunny", R.drawable.ic_01_s))
         return currentWeather
     }
 
-    fun insert(weather: Weather) {
+    private fun insert(weather: Weather) {
         InsertAsyncTask(weatherDao).execute(weather)
     }
 
