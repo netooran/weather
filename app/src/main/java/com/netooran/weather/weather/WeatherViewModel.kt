@@ -1,14 +1,22 @@
 package com.netooran.weather.weather
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.netooran.weather.R
-import com.netooran.weather.persistence.Weather
+import android.location.Location
+import com.netooran.weather.RetrofitLiveData
 
 class WeatherViewModel(private var weatherRepo: WeatherRepository) : ViewModel() {
 
-    fun getCurrentWeather(location: String): LiveData<Weather> = weatherRepo.getCurrentWeather(location)
+    private lateinit var currentWeather: RetrofitLiveData<Model.Weather>
+
+    fun getCurrentWeather(location: Location): RetrofitLiveData<Model.Weather> {
+        currentWeather = weatherRepo.getWeather(location)
+        return currentWeather
+    }
+
+    override fun onCleared() {
+        currentWeather.cancel()
+    }
 
     class ViewModelFactory(private val repository: WeatherRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
